@@ -75,8 +75,9 @@
     $.post("<?=SITE_ROOT?>/processing/checkRegisterBatch.php", "", (result) => {
       let buttons = $("#registerSidebar button");
       if (result === '0'){
-        for(let i = 0, n = buttons.length; i < n-1; i++){
-          $(buttons[i]).attr("disabled", true);
+        for(let i = 0, n = buttons.length; i < n; i++){
+          let $button = $(buttons[i]);
+          if($button.attr("id") != 'closeRegister') $button.attr('disabled', true);
         }
         $("#closeRegister").text("Open Register");
         $("#closeRegisterModalTitle").text("Open Register");

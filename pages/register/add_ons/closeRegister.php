@@ -132,11 +132,10 @@
   </div>
 </div>
 <script>
-  $("body").on("hidden.bs.modal", "#quickRemoveModal", () => {
-    let inputs = $("input[type='number']");
-    for(let i = 0; i < inputs.length; i++){
-      inputs[i].val(0);
-    }
+  $("body").on("hidden.bs.modal", "#closeRegisterModal", () => {
+    $("#closeRegisterModal input[type='number']").val(0);
+    $("#closeRegisterModal .lineTotal").html("0.00");
+    $("#closeRegisterTotal").html("0.00");
   });
 
   $("#closeRegisterSubmit").click(() => {
