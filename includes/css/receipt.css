@@ -1,0 +1,21 @@
+@page {
+  size: portrait;
+  /* margin: auto; */
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-size: .8em;
+}
+
+td {
+  font-size: .75em;
+}
+
+tfoot tr td:first-child {
+  text-align: right;
+}
