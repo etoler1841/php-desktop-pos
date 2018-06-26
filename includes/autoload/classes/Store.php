@@ -12,6 +12,8 @@
           $this->{$result[0]} = $result[1];
         }
       }
+
+      $this->FULL_ADDRESS = $this->STORE_ADDRESS."\n".$this->STORE_CITY.", ".$this->STORE_STATE." ".$this->STORE_ZIP."\n".phoneFormat($this->STORE_PHONE);
     }
 
     public function registerBatch(){

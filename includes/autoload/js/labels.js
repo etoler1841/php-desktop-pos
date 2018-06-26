@@ -247,25 +247,27 @@ const gameSleeve = `<?xml version="1.0" encoding="utf-8"?>
                       	</ObjectInfo>
                       </DieCutLabel>`;
 
-function printLabel(labelType){
+const address = (`<?=$store->FULL_ADDRESS?>`);
+
+function printLabel(params){
   let labelXML;
   let label;
-  switch(labelType){
+  switch(params.type){
     case 'gameCase':
       labelXML = gameCase;
       label = dymo.label.framework.openLabelXml(labelXML);
-      label.setObjectText("BARCODE", 12345);
-      label.setObjectText("PRICE", "$129.99");
-      label.setObjectText("PLATFORM", "Nintendo 64");
-      label.setObjectText("TITLE", "Legend of Zelda, The Ocarina of Time");
-      label.setObjectText("ADDRESS", `PriceBustersGames.com\n4771 Bayou Blvd. #7\nPensacola, FL 32503\n(850)912-8922`);
+      label.setObjectText("BARCODE", params.barcode);
+      label.setObjectText("PRICE", "$"+params.price);
+      label.setObjectText("PLATFORM", params.platform);
+      label.setObjectText("TITLE", params.title);
+      label.setObjectText("ADDRESS", address);
       break;
     case 'gameSleeve':
       labelXML = gameSleeve;
       label = dymo.label.framework.openLabelXml(labelXML);
-      label.setObjectText("BARCODE", 12345);
-      label.setObjectText("PLATFORM", "Nintendo 64");
-      label.setObjectText("TITLE", "Legend of Zelda, The Ocarina of Time");
+      label.setObjectText("BARCODE", params.barcode);
+      label.setObjectText("PLATFORM", params.platform);
+      label.setObjectText("TITLE", params.title);
       break;
     default:
       window.alert("Label type not found.");
@@ -285,43 +287,3 @@ function printLabel(labelType){
   }
   label.print(printerName);
 }
-
-// function printGameSleeve(){
-//   let labelXML = ``;
-//   let label = dymo.label.framework.openLabelXml(labelXML);
-//   label.setObjectText("", params.);
-//   //...
-//   var printers = dymo.label.framework.getPrinters();
-//   if(printers.length == 0){
-//     throw "No DYMO printers installed.";
-//   }
-//   let printerName;
-//   for(let i = 0; i < printers.length; ++i){
-//     let printer = printers[i];
-//     if(printer.printerType == "LabelWriterPrinter"){
-//       printerName = printer.name;
-//       break;
-//     }
-//   }
-//   label.print(printerName);
-// }
-//
-// function printPrice(){
-//   let labelXML = ``;
-//   let label = dymo.label.framework.openLabelXml(labelXML);
-//   label.setObjectText("", params.);
-//   //...
-//   var printers = dymo.label.framework.getPrinters();
-//   if(printers.length == 0){
-//     throw "No DYMO printers installed.";
-//   }
-//   let printerName;
-//   for(let i = 0; i < printers.length; ++i){
-//     let printer = printers[i];
-//     if(printer.printerType == "LabelWriterPrinter"){
-//       printerName = printer.name;
-//       break;
-//     }
-//   }
-//   label.print(printerName);
-// }
