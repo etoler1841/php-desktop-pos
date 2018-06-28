@@ -11,9 +11,10 @@
     <thead class='thead-light'>
       <tr>
         <th class="col-1">Qty.</th>
-        <th class='col-6'>Description</th>
-        <th class='col-3'>Category</th>
+        <th class='col-5'>Description</th>
+        <th class='col-2'>Category</th>
         <th class='col-2'>Price</th>
+        <th class='col-2'>Print</th>
       </tr>
     </thead>
     <tbody>
@@ -21,6 +22,9 @@
     </tbody>
   </table>
   <button class='btn btn-sm btn-success' id='saveInventory'>Save</button>
+  <?php
+    require(SITE_ROOT.'/pages/load_inventory/productBrowse.php');
+  ?>
 </div>
 <script>
   $(window).on("load", () => {
@@ -74,28 +78,38 @@
     });
   });
 
-  $("#print").click(() => {
+  $("#loadInventoryQueue tbody").on("click", ".print", (e) => {
+    let $row = $(e.currentTarget).parent().parent();
+    let id = $row.attr("id");
+    let category = $row.children(".cat").text();
+    let name = $row.children(".name").text();
+    let price = $row.children(".price").text();
     let params = {
-      type: 'gameCase',
-      barcode: 12345,
-      platform: 'Nintendo 64',
-      title: 'Legend of Zelda, The Ocarina of Time',
-      price: '29.99'
+      barcode: id,
+      category: category,
+      name: name,
+      price: price
     };
-    printLabel(params);
-    printLabel(params);
+    console.log(params);
+    return;
+    $.post("<?=SITE_ROOT?>/processing/printQuery.php", JSON.stringify({ id: id }), (result) => {
+      let data = JSON.parse(result);
+      for(type of data.type){
+        printLabel(type, params);
+      }
+    });
   });
 
   //functions
   function addItem(params){
-    $("#loadInventoryQueue tbody").append(`
-      <tr id='${params.id}'>
-        <td class='col-1'><input type='number' class='form-control qty' style='width: 75px' value='1' /></td>
-        <td class='col-6'>${params.name}</td>
-        <td class='col-3'>${params.cat}</td>
-        <td class='col-2'>$${round(params.price)}</td>
-      </tr>
-    `);
+    let html = `<tr id='${params.id}'>
+      <td class='col-1'><input type='number' class='form-control qty' style='width: 75px' value='1' /></td>
+      <td class='col-5 name'>${params.name}</td>
+      <td class='col-2 cat'>${params.cat}</td>
+      <td class='col-2 price'>$${round(params.price)}</td>
+      <td class='col-2'><button class='btn btn-sm btn-warning print'>Print Labels</button></td>
+    </tr>`;
+    $("#loadInventoryQueue tbody").prepend(html);
   }
 
   function increment(id){

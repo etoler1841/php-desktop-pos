@@ -1,3 +1,5 @@
+const standard = ``;
+
 const gameCase = `<?xml version="1.0" encoding="utf-8"?>
                     <DieCutLabel Version="8.0" Units="twips" MediaType="Default">
                     	<PaperOrientation>Landscape</PaperOrientation>
@@ -249,25 +251,33 @@ const gameSleeve = `<?xml version="1.0" encoding="utf-8"?>
 
 const address = (`<?=$store->FULL_ADDRESS?>`);
 
-function printLabel(params){
+function printLabel(type, params){
   let labelXML;
   let label;
-  switch(params.type){
+  switch(type){
+    case 'standard':
+      labelXML = standard;
+      label = dymo.label.framework.openLabelXml(labelXML);
+      label.setObjectText("BARCODE", params.barcode);
+      label.setObjectText("PRICE", params.price);
+      label.setObjectText("NAME", params.name);
+      label.setObjectText("ADDRESS", address);
+      break;
     case 'gameCase':
       labelXML = gameCase;
       label = dymo.label.framework.openLabelXml(labelXML);
       label.setObjectText("BARCODE", params.barcode);
-      label.setObjectText("PRICE", "$"+params.price);
-      label.setObjectText("PLATFORM", params.platform);
-      label.setObjectText("TITLE", params.title);
+      label.setObjectText("PRICE", params.price);
+      label.setObjectText("PLATFORM", params.category);
+      label.setObjectText("TITLE", params.name);
       label.setObjectText("ADDRESS", address);
       break;
     case 'gameSleeve':
       labelXML = gameSleeve;
       label = dymo.label.framework.openLabelXml(labelXML);
       label.setObjectText("BARCODE", params.barcode);
-      label.setObjectText("PLATFORM", params.platform);
-      label.setObjectText("TITLE", params.title);
+      label.setObjectText("PLATFORM", params.category);
+      label.setObjectText("TITLE", params.name);
       break;
     default:
       window.alert("Label type not found.");

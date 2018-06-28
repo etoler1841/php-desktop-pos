@@ -28,7 +28,7 @@
         </table>
       </div>
       <div class='modal-footer'>
-        <button type='button' class='btn btn-primary' id='lookupItemSubmit'>Add Item</button>
+        <button type='button' class='btn btn-primary' id='lookupItemSubmit' disabled>Add Item</button>
         <button type='button' class='btn btn-secondary' data-dismiss='modal' id='lookupItemClose'>Cancel</button>
       </div>
     </div>
@@ -39,6 +39,7 @@
     $("#lookupItemSearch").val("");
     $("#lookupItemResultCount").text("0");
     $("#lookupItemResults tbody").html("");
+    $("#lookupItemSubmit").attr("disabled", true);
   });
 
   $("#lookupItemSearch").keyup((e) => {
@@ -49,9 +50,17 @@
         $("#lookupItemResultCount").text(data.length);
         let list = "";
         for(let i = 0, n = data.length; i < n; i++){
-          list += "<tr id='"+data[i].id+"'><td class='col-1'>"+data[i].stock+"</td><td class='col-6'>"+data[i].name+"</td><td class='col-3'>"+data[i].cat+"</td><td class='col-2'>$"+round(data[i].price)+"</td></tr>";
+          list += `<tr id='${data[i].id}'>
+            <td class='col-1'>${data[i].stock}</td>
+            <td class='col-6'>${data[i].name}</td>
+            <td class='col-3'>${data[i].cat}</td>
+            <td class='col-2'>$${round(data[i].price)}</td>
+          </tr>`;
         }
         $("#lookupItemResults tbody").html(list);
+        if(!$("#lookupItemResults .table-primary").length) {
+          $("#lookupItemSubmit").attr("disabled", true);
+        }
       });
     }
   });
@@ -59,6 +68,7 @@
   $("#lookupItemModal tbody").on("click", "tr", (e) => {
     $("#lookupItemModal tbody tr").removeClass("table-primary");
     $(e.currentTarget).addClass("table-primary");
+    $("#lookupItemSubmit").attr("disabled", false);
   });
 
   $("#lookupItemSubmit").click(() => {
