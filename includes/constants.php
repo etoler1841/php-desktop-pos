@@ -5,4 +5,5 @@
   define('TBL_CATEGORIES_DESCRIPTION', PREFIX.'categories_description');
   define('TBL_PRODUCTS', PREFIX.'products');
   define('TBL_PRODUCTS_DESCRIPTION', PREFIX.'products_description');
+  define('TBL_LABELS', 'pos_labels');
 ?>
