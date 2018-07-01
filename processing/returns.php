@@ -15,9 +15,9 @@
                       products_price_ea
                 FROM transaction_entry
                 WHERE transaction_entry_id = ".$data['entryID'];
-      $result = $mysqlL->query($stmt)->fetch_array(MYSQLI_ASSOC);
+      $result = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
 
-      $teStmt = $mysqlL->prepare("INSERT INTO transaction_entry
+      $teStmt = $db->prepare("INSERT INTO transaction_entry
                                 SET transaction_id = ?,
                                     entry_type = 4,
                                     products_id = ?,
@@ -41,8 +41,8 @@
                         tender_credit = 0.00,
                         tender_giftcard = 0.00,
                         change_due = ".$result['total'];
-          $mysqlL->query($stmt);
-          $transID = $mysqlL->insert_id;
+          $db->query($stmt);
+          $transID = $db->insert_id;
           $qty = 1;
           $teStmt->bind_param("iiiisddd",
                             $transID,
@@ -54,11 +54,11 @@
                             $result['products_price_ea'],
                             $result['price']);
           $teStmt->execute();
-          echo $mysqlL->error;
+          echo $db->error;
           $stmt = "UPDATE transaction_entry
                     SET quantity_returned = quantity_returned + 1
                     WHERE transaction_entry_id = ".$data['entryID'];
-          $mysqlL->query($stmt);
+          $db->query($stmt);
           $return['amt'] = $result['total'];
           break;
         case 'line':
@@ -73,8 +73,8 @@
                         tender_credit = 0.00,
                         tender_giftcard = 0.00,
                         change_due = ".$result['total'];
-          $mysqlL->query($stmt);
-          $transID = $mysqlL->insert_id;
+          $db->query($stmt);
+          $transID = $db->insert_id;
           $newQty = $result['products_quantity'] - $result['quantity_returned'];
           $teStmt->bind_param("iiiisddd",
                               $transID,
@@ -89,11 +89,11 @@
           $stmt = "UPDATE transaction_entry
                     SET quantity_returned = products_quantity
                     WHERE transaction_entry_id = ".$data['entryID'];
-          $mysqlL->query($stmt);
+          $db->query($stmt);
           $return['amt'] = $result['total'];
           break;
         }
-      if(!$mysqlL->connect_error){
+      if(!$db->connect_error){
         $return['status'] = 'success';
       }
       break;

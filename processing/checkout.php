@@ -11,10 +11,10 @@
          tender_credit = ".$data['tender_credit'].",
          tender_giftcard = ".$data['tender_giftcard'].",
          change_due = ".$data['change_due'];
-  $mysqlL->query($stmt);
-  $transactionID = $mysqlL->insert_id;
+  $db->query($stmt);
+  $transactionID = $db->insert_id;
 
-  $stmt1 = $mysqlL->prepare("INSERT INTO transaction_entry
+  $stmt1 = $db->prepare("INSERT INTO transaction_entry
                  SET transaction_id = $transactionID,
                    entry_type = ?,
                    products_id = ?,
@@ -24,10 +24,10 @@
                    products_discount = ?,
                    products_price_ea = ?,
                    products_price_ext = ?");
-  $stmt2 = $mysqlL->prepare("UPDATE products
+  $stmt2 = $db->prepare("UPDATE products
                  SET products_quantity = products_quantity - ?
                  WHERE products_id = ?");
-  $stmt3 = $mysqlL->prepare("INSERT INTO upload_queue
+  $stmt3 = $db->prepare("INSERT INTO upload_queue
                  SET products_id = ?,
                    products_quantity = -?");
   for($i = 0, $n = sizeof($data['items']); $i < $n; $i++){

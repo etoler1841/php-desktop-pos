@@ -9,11 +9,11 @@
   $stmt = "UPDATE products
            SET products_quantity = products_quantity + $qty
            WHERE products_id = $id";
-  $mysqlL->query($stmt);
+  $db->query($stmt);
 
   $stmt = "INSERT INTO upload_queue
            SET products_id = $id,
                products_quantity = $qty";
-  $mysqlL->query($stmt);
+  $db->query($stmt);
   dbTransactionUpload();
 ?>

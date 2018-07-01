@@ -18,7 +18,7 @@
            closing_cid_difference = ".$store->cidDifference($count)."
          WHERE register_batch_id = ".$store->registerBatch();
   }
-  $mysqlL->query($stmt);
+  $db->query($stmt);
   
   echo json_encode(array("batchID" => $store->registerBatch()));
 ?>

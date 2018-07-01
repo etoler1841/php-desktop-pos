@@ -17,7 +17,7 @@
   }
   $stmt .= "p.products_model LIKE '$id'
         LIMIT 1";
-  $result = $mysqlL->query($stmt);
+  $result = $db->query($stmt);
   while($row = $result->fetch_array(MYSQLI_ASSOC)){
     $return = array('id' => $row['products_id'],
             'name' => $row['products_name'],

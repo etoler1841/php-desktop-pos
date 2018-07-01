@@ -5,7 +5,7 @@
   $data = json_decode(file_get_contents("php://input"), true);
 
   $stmt = "SELECT 1 FROM transaction WHERE transaction_id = ".$data['id'];
-  $result = $mysqlL->query($stmt);
+  $result = $db->query($stmt);
   if($result->num_rows > 0){
     echo "success";
   }

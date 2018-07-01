@@ -14,7 +14,7 @@
   $tender = $register->getTender();
   $transTypes = $register->getTransTypes();
 
-  $stmt = $mysqlL->prepare("SELECT c.categories_name, SUM(te.products_quantity), SUM(te.products_price_ext)
+  $stmt = $db->prepare("SELECT c.categories_name, SUM(te.products_quantity), SUM(te.products_price_ext)
                             FROM transaction_entry te
                             LEFT JOIN transaction t ON te.transaction_id = t.transaction_id
                             LEFT JOIN products p ON te.products_id = p.products_id
@@ -41,7 +41,7 @@
        FROM transaction
        WHERE time >= '$startTime'
        AND time <= '$endTime'";
-  $tender = $mysqlL->query($stmt)->fetch_array(MYSQLI_ASSOC);
+  $tender = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
 
   $drawer = array(
           'openingCash' => array('line' => 'Opening cash',

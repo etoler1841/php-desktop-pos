@@ -1,20 +1,20 @@
 <?php
   function getCategories($parentID = 0){
-    global $mysqlR;
-    
+    $ch = curl_init();
+
     if(!intval($parentID)){
       $parentID = 0;
     }
-    $stmt = "SELECT c.categories_id, cd.categories_name
-         FROM categories c
-         LEFT JOIN categories_description cd ON c.categories_id = cd.categories_id
-         WHERE c.parent_id = $parentID";
-    $result = $mysqlR->query($stmt);
-    while($row = $result->fetch_array(MYSQLI_NUM)){
-      $return[$row[0]] = $row[1];
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/category/".$parentID);
+    $response = json_decode(curl_exec($ch));
+    if($response->results){
+      foreach($response->results['children'] as $child){
+        $return[$child['categories_id']] = $child['categories_name'];
+      }
     }
     sort($return);
-    
+
     return $return;
   }
 ?>

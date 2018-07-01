@@ -1,10 +1,10 @@
 <?php
   class Register {
     public function __construct($batchID){
-      global $mysqlL;
+      global $db;
 
       $stmt = "SELECT * FROM register_batch WHERE register_batch_id = $batchID";
-      $result = $mysqlL->query($stmt)->fetch_array(MYSQLI_ASSOC);
+      $result = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
 
       $this->batchID = $result['register_batch_id'];
       $this->cashOpen = $result['opening_cash'];
@@ -19,7 +19,7 @@
            FROM transaction
            WHERE time >= '".$this->timeOpen."'";
       if($this->timeClose) $stmt .= " AND time <= '".$this->timeClose."'";
-      $result = $mysqlL->query($stmt)->fetch_array(MYSQLI_NUM);
+      $result = $db->query($stmt)->fetch_array(MYSQLI_NUM);
       $this->cashInDrawer = $this->cashOpen+$result[0]-$result[1];
 
       $name = function($empID){
@@ -31,7 +31,7 @@
     }
 
     public function getTender(){
-      global $mysqlL;
+      global $db;
 
       $startTime = $this->timeOpen;
       $endTime = ($this->timeClose) ? $this->timeClose : date("Y-m-d H:i:s");
@@ -41,18 +41,18 @@
            FROM transaction
            WHERE time >= '$startTime'
            AND time <= '$endTime'";
-      $tender = $mysqlL->query($stmt)->fetch_array(MYSQLI_ASSOC);
+      $tender = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
 
       return $tender;
     }
 
     public function getTotals(){
-      global $mysqlL;
+      global $db;
 
       $startTime = $this->timeOpen;
       $endTime = ($this->timeClose) ? $this->timeClose : date("Y-m-d H:i:s");
       $transTypes = $this->getTransTypes();
-      $stmt = $mysqlL->prepare("SELECT SUM(te.products_price_ext), SUM(te.products_quantity), SUM(t.sales_tax)
+      $stmt = $db->prepare("SELECT SUM(te.products_price_ext), SUM(te.products_quantity), SUM(t.sales_tax)
                     FROM transaction_entry te
                     LEFT JOIN transaction t ON te.transaction_id = t.transaction_id
                     WHERE t.time >= '$startTime'

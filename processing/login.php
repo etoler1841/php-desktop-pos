@@ -5,7 +5,7 @@
   foreach($_POST as $a => $b){
     ${$a} = $b;
   }
-  $sql = $mysqlL->prepare("SELECT employee_id, employee_password FROM employee WHERE employee_username = ?");
+  $sql = $db->prepare("SELECT employee_id, employee_password FROM employee WHERE employee_username = ?");
   $sql->bind_param("s", $username);
   $sql->execute();
   $sql->bind_result($employee_id, $employee_password);

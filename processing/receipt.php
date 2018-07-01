@@ -7,7 +7,7 @@
        FROM transaction_entry
        WHERE transaction_id = ".$params['transID'];
   $data = array();
-  $result = $mysqlL->query($stmt);
+  $result = $db->query($stmt);
   while($row = $result->fetch_array(MYSQLI_ASSOC)){
     $data[] = array(
       "type" => "item",
@@ -22,7 +22,7 @@
        LEFT JOIN transaction_entry te ON t.transaction_id = te.transaction_id
        LEFT JOIN employee e ON t.employee = e.employee_id
        WHERE t.transaction_id = ".$params['transID'];
-  $result = $mysqlL->query($stmt)->fetch_array(MYSQLI_ASSOC);
+  $result = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
   $data[] = array(
     "type" => "employee",
     "name" => $result['employee_first_name']

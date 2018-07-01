@@ -1,6 +1,6 @@
 <?php
   $stmt = "SELECT value FROM app_config WHERE setting = 'SECURITY_TOKEN'";
-  $result = $mysqlL->query($stmt)->fetch_array();
+  $result = $db->query($stmt)->fetch_array();
   $token = $result[0];
 ?>
 <div class='loginBoxWrapper'>

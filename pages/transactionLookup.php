@@ -5,12 +5,12 @@
            FROM transaction t
            LEFT JOIN employee e ON t.employee = e.employee_id
            WHERE t.transaction_id = $transID";
-  $data['transInfo'] = $mysqlL->query($stmt)->fetch_array(MYSQLI_ASSOC);
+  $data['transInfo'] = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
 
   $stmt = "SELECT transaction_entry_id, entry_type, products_id, products_quantity, quantity_returned, products_name, products_discount, products_price_ea, products_price_ext
            FROM transaction_entry
            WHERE transaction_id = $transID";
-  $result = $mysqlL->query($stmt);
+  $result = $db->query($stmt);
   while($row = $result->fetch_array(MYSQLI_ASSOC)){
     $types = Register::getTransTypes();
     $data['items'][] = array(
