@@ -90,8 +90,6 @@
       name: name,
       price: price
     };
-    console.log(params);
-    return;
     $.post("<?=SITE_ROOT?>/processing/printQuery.php", JSON.stringify({ id: id }), (result) => {
       let data = JSON.parse(result);
       for(type of data.type){

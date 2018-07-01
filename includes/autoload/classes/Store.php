@@ -13,7 +13,7 @@
         }
       }
 
-      $this->FULL_ADDRESS = $this->STORE_ADDRESS."\n".$this->STORE_CITY.", ".$this->STORE_STATE." ".$this->STORE_ZIP."\n".phoneFormat($this->STORE_PHONE);
+      $this->FULL_ADDRESS = "PriceBustersGames.com\n".$this->STORE_ADDRESS."\n".$this->STORE_CITY.", ".$this->STORE_STATE." ".$this->STORE_ZIP."\n".phoneFormat($this->STORE_PHONE);
     }
 
     public function registerBatch(){
