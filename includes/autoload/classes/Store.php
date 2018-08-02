@@ -44,6 +44,16 @@
       return $count-($openingCash+$cashIn);
     }
 
+    public function dbLastDownload($date){
+      global $db;
+
+      $update = date("Y-m-d H:i:s", $date);
+      $stmt = "UPDATE app_config
+               SET value = '$update'
+               WHERE setting = 'DB_LAST_DOWNLOAD'";
+      $db->query($stmt);
+    }
+
     public function logout(){
       global $db;
 

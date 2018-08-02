@@ -1,81 +1,144 @@
 <?php
-  function updateDB(){
+  function updateDB($store){
     global $db;
+    $token = $store->SECURITY_TOKEN;
+
     $ch = curl_init();
+    $headers = array("Authorization: bearer $token");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    //Find the newest category in the local DB
-    $stmt = "SELECT categories_id FROM categories ORDER BY categories_id DESC LIMIT 1";
-    $result = $db->query($stmt);
-    if($result->num_rows > 0){
-      $row = $result->fetch_array(MYSQLI_NUM);
-      $maxCat = $row[0];
-    } else {
-      $maxCat = 0;
+    $lastUpdate = strtotime($store->DB_LAST_DOWNLOAD);
+    $now = time();
+    updateCategories($ch, $lastUpdate);
+    updateProducts($ch, $lastUpdate);
+    if(!$db->error){
+      $store->dbLastDownload(time());
     }
+  }
 
-    //Find categories on the server not yet in the local DB, get their info, and insert into the local DB
+  function updateCategories($ch, $lastUpdate){
+    global $db;
+
+    $values = array(
+      'limit' => '1',
+      'offset' => '0',
+      'after' => $lastUpdate
+    );
+
+    $valArr = array();
+    foreach($values as $key => $val){
+      $valArr[] = $key.'='.$val;
+    }
+    $vals = implode("&", $valArr);
+    curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/category/?$vals");
+    $res = json_decode(curl_exec($ch));
+    if($res->status !== 'ok' || !sizeof((array)$res->results)) return;
+
+    $values['limit'] = '100';
+
+    $sql = "SELECT 1
+            FROM categories
+            WHERE categories_id = ?";
+    $checkStmt = $db->prepare($sql);
+
     $sql = "INSERT INTO categories
             SET categories_id = ?,
                 categories_name = ?,
                 parent_id = ?";
-    $stmt1 = $db->prepare($sql);
-    $sql = "INSERT INTO labels
-            SET categories_id = ?,
-                standard = ?,
-                barcode = ?,
-                game_case = ?,
-                game_sleeve = ?";
-    $stmt2 = $db->prepare($sql);
-    do{
-      $cat = $maxCat+1;
-      $val = $cat."?tree=0";
-      curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/category/".$val);
-      $response = json_decode(curl_exec($ch));
-      if($response->results){
-        extract($response->results[0]);
-        $stmt1->bind_param("isi", $categories_id, $categories_name, $parent_id);
-        $stmt1->execute();
-        curl_setopt($ch, CURLOPT_URL,
-        "http://www.pricebustersgames.com/pbadmin/pos-api/label/".$cat);
-        extract(json_decode(curl_exec($ch)));
-        $stmt2->bind_param("iiiii", $categories_id, $standard, $barcode, $game_case, $game_sleeve);
-        $stmt2->close();
-        $maxCat = $cat;
+    $insertStmt = $db->prepare($sql);
+
+    $i = 0;
+    do {
+      $values['offset'] = $i*$values['limit'];
+      $valArr = array();
+      foreach($values as $key => $val){
+        $valArr[] = $key.'='.$val;
       }
-    } while($response->results);
-    $stmt1->close();
-    $stmt2->close();
+      $vals = implode("&", $valArr);
+      curl_setopt($ch, CURLOPT_URL, "http://pricebustersgames.com/pbadmin/pos-api/category/?$vals");
+      $res = json_decode(curl_exec($ch));
+      if($res->status === 'ok'){
+        foreach($res->results as $cat){
+          extract((array)$cat);
 
-    //Find the newest product in the local DB
-    $stmt = "SELECT products_id FROM products ORDER BY products_id DESC LIMIT 1";
-    $result = $db->query($stmt);
-    if($result->num_rows > 0){
-      $row = $result->fetch_array(MYSQLI_NUM);
-      $maxProd = $row[0];
-    } else {
-      $maxProd = 0;
+          $checkStmt->bind_param("i", $categories_id);
+          $checkStmt->execute();
+          $checkStmt->store_result();
+          if(!$checkStmt->num_rows){
+            $insertStmt->bind_param("isi", $categories_id, $categories_name, $parent_id);
+            $insertStmt->execute();
+          }
+        }
+        $i++;
+      } else {
+        print_r($res->errors);
+        exit;
+      }
+    } while($res->results);
+  }
+
+  function updateProducts($ch, $lastUpdate){
+    global $db;
+
+    $values = array(
+      'limit' => '1',
+      'offset' => '0',
+      'after' => $lastUpdate
+    );
+
+    $valArr = array();
+    foreach($values as $key => $val){
+      $valArr[] = $key.'='.$val;
     }
+    $vals = implode("&", $valArr);
+    curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/product/?");
+    $res = json_decode(curl_exec($ch));
+    if($res->status !== 'ok' || !sizeof((array)$res->results)) return;
 
-    //Find products on the server not yet in the local DB, get their info, and insert into the local DB
+    $values['limit'] = '100';
+
+    $sql = "SELECT 1
+            FROM products
+            WHERE products_id = ?";
+    $checkStmt = $db->prepare($sql);
+
     $sql = "INSERT INTO products
             SET products_id = ?,
-              products_name = ?,
-              products_quantity = ?,
-              products_model = ?,
-              products_price = ?,
-              master_categories_id = ?";
+                products_name = ?,
+                products_quantity = ?,
+                products_model = ?,
+                products_price = ?,
+                master_categories_id = ?";
     $stmt = $db->prepare($sql);
-    do{
-      $prod = $maxProd+1;
-      curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/product/".$prod);
-      $response = json_decode(curl_exec($ch));
-      if($response->results){
-        extract($response->results);
-        $stmt1->bind_param("isisdi", $products_id, $products_name, $products_quantity, $products_model, $products_price, $categories_id);
-        $stmt1->execute();
-        $maxProd = $prod;
+
+    $i = 0;
+    do {
+      $values['offset'] = $i*$values['limit'];
+      $valArr = array();
+      foreach($values as $key => $val){
+        $valArr[] = $key.'='.$val;
       }
-    } while($response->results);
+      $vals = implode("&", $valArr);
+      curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/product/?$vals");
+      $res = json_decode(curl_exec($ch));
+      if($res->status === 'ok'){
+        foreach($res->results as $prod){
+          extract((array)$prod);
+
+          $checkStmt->bind_param("i", $products_id);
+          $checkStmt->execute();
+          $checkStmt->store_result();
+          if(!$checkStmt->num_rows){
+            $stmt->bind_param("isisdi", $products_id, $products_name, $products_quantity, $products_model, $products_price, $categories_id);
+            $stmt->execute();
+          }
+        }
+        $i++;
+      } else {
+        print_r($res->errors);
+        exit;
+      }
+    } while($res->results);
   }
 ?>

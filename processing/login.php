@@ -15,7 +15,7 @@
   if(password_verify($password, $employee_password)){
     $employee = new Employee(intval($employee_id));
     $employee->login();
-    updateDB();
+    updateDB($store);
     echo "success";
   }
 ?>
