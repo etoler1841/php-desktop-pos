@@ -15,5 +15,5 @@
            SET products_id = $id,
                products_quantity = $qty";
   $db->query($stmt);
-  dbTransactionUpload();
+  dbTransactionUpload($store);
 ?>

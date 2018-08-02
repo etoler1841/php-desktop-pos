@@ -1,6 +1,6 @@
 <?php
   //Turn off error reporting -- enable ONLY when debugging
-  //error_reporting(0);
+  error_reporting(0);
 
   //Import constant definitions
   require(SITE_ROOT.'/includes/constants.php');

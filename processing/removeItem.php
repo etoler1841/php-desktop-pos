@@ -10,9 +10,10 @@
        SET products_quantity = products_quantity - 1
        WHERE products_id = $id";
   $db->query($stmt);
-  
+
   $stmt = "INSERT INTO upload_queue
        SET products_id = $id,
          products_quantity = -1";
   $db->query($stmt);
+  dbTransactionUpload($store);
 ?>
