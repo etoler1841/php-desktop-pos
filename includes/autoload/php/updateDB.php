@@ -31,7 +31,7 @@
       $valArr[] = $key.'='.$val;
     }
     $vals = implode("&", $valArr);
-    curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/category/?$vals");
+    curl_setopt($ch, CURLOPT_URL, "$remote/category/?$vals");
     $res = json_decode(curl_exec($ch));
     if($res->status !== 'ok' || !sizeof((array)$res->results)) return;
 
@@ -92,7 +92,7 @@
       $valArr[] = $key.'='.$val;
     }
     $vals = implode("&", $valArr);
-    curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/product/?");
+    curl_setopt($ch, CURLOPT_URL, "$remote/product/?");
     $res = json_decode(curl_exec($ch));
     if($res->status !== 'ok' || !sizeof((array)$res->results)) return;
 
@@ -120,7 +120,7 @@
         $valArr[] = $key.'='.$val;
       }
       $vals = implode("&", $valArr);
-      curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/product/?$vals");
+      curl_setopt($ch, CURLOPT_URL, "$remote/product/?$vals");
       $res = json_decode(curl_exec($ch));
       if($res->status === 'ok'){
         foreach($res->results as $prod){

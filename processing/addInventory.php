@@ -15,7 +15,7 @@
     $headers = "Authorization: bearer $token";
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/product/$id");
+    curl_setopt($ch, CURLOPT_URL, "$remote/product/$id");
     $res = json_decode(curl_exec($ch));
     if($res->status === 'ok'){
       $sql = "UPDATE products
@@ -25,11 +25,11 @@
       $stmt->bind_param("d", $res->products_price);
       $stmt->execute();
       $stmt->close();
-      
+
       $data = array(
         'price' => $res->products_price;
       );
-      curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/price-change/$id");
+      curl_setopt($ch, CURLOPT_URL, "$remote/price-change/$id");
       curl_setopt($ch, CURLOPT_POST, true);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
@@ -46,5 +46,5 @@
            SET products_id = $id,
                products_quantity = $qty";
   $db->query($stmt);
-  dbTransactionUpload($store);
+  $store->dbTransactionUpload();
 ?>

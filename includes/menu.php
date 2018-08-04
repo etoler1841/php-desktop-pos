@@ -11,6 +11,9 @@
       <li class='nav-item'>
         <a class='nav-link' href='?page=reports&mode=daily&batch=<?=$store->registerBatch()?>'>View Report</a>
       </li>
+      <li class='nav-item'>
+        <a class='nav-link' href='?page=priceUpdates'>Price Updates<?=priceUpdateCheck()?></a>
+      </li>
     </ul>
   </div>
   <span class='navbar-text'>

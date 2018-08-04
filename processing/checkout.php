@@ -47,7 +47,7 @@
   $stmt1->close();
   $stmt2->close();
   $stmt3->close();
-  dbTransactionUpload($store);
+  $store->dbTransactionUpload();
 
   echo json_encode(array("transID" => $transactionID));
 ?>

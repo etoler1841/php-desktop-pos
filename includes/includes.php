@@ -1,6 +1,10 @@
 <?php
   //Turn off error reporting -- enable ONLY when debugging
-  error_reporting(0);
+  //error_reporting(0);
+
+  //Remote host URL
+  //$remote = "http://www.pricebustersgames.com/pbadmin/pos-api";
+  $remote = "http://127.0.0.1/dev/pos-api";
 
   //Import constant definitions
   require(SITE_ROOT.'/includes/constants.php');

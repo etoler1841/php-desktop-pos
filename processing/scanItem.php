@@ -16,7 +16,7 @@
     $headers = array("Authorization: bearer $token");
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, "http://www.pricebustersgames.com/pbadmin/pos-api/product/$id");
+    curl_setopt($ch, CURLOPT_URL, "$remote/product/$id");
     $res = json_decode(curl_exec($ch));
 
     $sql = "UPDATE products

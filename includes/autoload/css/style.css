@@ -46,22 +46,46 @@ input[type='number'] {
   font-weight: bold;
 }
 
-.table-fixed thead {
-  width: 97.5%;
+#registerMain .table-fixed thead {
+  width: 98.5%;
 }
 
-.table-fixed tbody {
+#registerMain .table-fixed tbody {
   height: 225px;
   overflow-y: scroll;
   width: 100%;
 }
 
-.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+#registerMain .table-fixed thead, #registerMain .table-fixed tbody, #registerMain .table-fixed tr, #registerMain .table-fixed td, #registerMain .table-fixed th {
   display: block;
   overflow-x: hidden;
 }
 
-.table-fixed tbody td, .table-fixed thead > tr > th {
+#registerMain .table-fixed tbody td, #registerMain .table-fixed thead > tr > th {
+  float: left;
+  border-bottom-width: 0;
+}
+
+#priceUpdates .table-fixed thead {
+  width: 98.5%;
+}
+
+#priceUpdates .table-fixed th {
+  white-space: nowrap;
+}
+
+#priceUpdates .table-fixed tbody {
+  height: 500px;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+#priceUpdates .table-fixed thead, #priceUpdates .table-fixed tbody, #priceUpdates .table-fixed tr, #priceUpdates .table-fixed td, #priceUpdates .table-fixed th {
+  display: block;
+  overflow-x: hidden;
+}
+
+#priceUpdates .table-fixed tbody td, #priceUpdates .table-fixed thead > tr > th {
   float: left;
   border-bottom-width: 0;
 }

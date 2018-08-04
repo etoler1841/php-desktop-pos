@@ -1,7 +1,7 @@
 function registerItemRow(data){
   let actions = `<a href='#' class='action add'>+</a>
-          <a href='#' class='action subtract'>-</a>
-          <a href='#' class='action remove'>&times;</a>`;
+    <a href='#' class='action subtract'>-</a>
+    <a href='#' class='action remove'>&times;</a>`;
   let sign;
   if(data.type == 1){
     sign = '';
