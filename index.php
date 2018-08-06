@@ -25,6 +25,15 @@
     <button id='logout' class='btn btn-dark btn-sm'>Logout</button>
   </div>
   <script>
+    function dlQueue(){
+      $.post("<?=SITE_ROOT?>/processing/dlQueue.php");
+    }
+
+    dlQueue();
+    setInterval(() => {
+      dlQueue();
+    }, 60000);
+
     $("#pinModal").modal("show");
 
     $("#pinModal").on("shown.bs.modal", () => {

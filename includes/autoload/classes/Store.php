@@ -138,5 +138,31 @@
       }
       $stmt->close();
     }
+
+    public function dlQueue(){
+      global $db;
+      global $remote;
+
+      $token = $this->SECURITY_TOKEN;
+      $headers = array("Authorization: bearer $token");
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_URL, $remote."/product/queue");
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+      $sql = "UPDATE products
+              SET products_quantity = products_quantity + ?
+              WHERE products_id = ?";
+      $stmt = $db->prepare($sql);
+
+      $res = json_decode(curl_exec($ch));
+      if($res->status === 'ok'){
+        foreach($res->results as $row){
+          extract((array)$row);
+          $stmt->bind_param("ii", $products_quantity, $products_id);
+          $stmt->execute();
+        }
+      }
+    }
   }
 ?>
