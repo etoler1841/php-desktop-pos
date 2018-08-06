@@ -95,6 +95,26 @@
     });
   };
 
+  $(document).on("hidden.bs.modal", $("#pinModal"), () => {
+    let idle = 0;
+    setInterval(() => {
+      idle += 1;
+      if(idle === 60){
+        if($(".modal-backdrop").hasClass("show")){
+          idle = 0;
+        } else {
+          $("#pinModal").modal("show");
+        }
+      }
+    }, 1000);
+    $(document).mousemove(() => {
+      idle = 0;
+    });
+    $(document).keypress(() => {
+      idle = 0;
+    });
+  });
+
   $(".currency").blur((e) => {
     let val = $(e.currentTarget).val();
     if(isNaN(Number(val))){
@@ -200,5 +220,9 @@
       updateTotal();
     }
     $("#scanField").focus();
+  });
+
+  $("#demoReceipt").click(() => {
+    generateReceipt(3);
   });
 </script>

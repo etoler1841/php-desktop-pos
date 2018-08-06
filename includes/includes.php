@@ -51,4 +51,5 @@
     }
   }
   $store = new Store;
+  date_default_timezone_set($store->STORE_TIMEZONE);
 ?>

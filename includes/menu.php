@@ -16,7 +16,4 @@
       </li>
     </ul>
   </div>
-  <span class='navbar-text'>
-    Hello, <?=$employee->first_name?>
-  </span>
 </nav>

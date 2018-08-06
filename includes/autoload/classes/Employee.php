@@ -16,28 +16,32 @@
       }
 
       $this->name = $this->first_name.' '.$this->last_name;
+      $this->shortName = $this->first_name.' '.substr($this->last_name, 0, 1).'.';
     }
 
     public function login(){
       global $db;
 
-      $sql = $db->prepare("UPDATE app_config SET value = ? WHERE setting = 'CURRENT_LOGIN'");
-      $sql->bind_param("s", strval($this->id));
-      $sql->execute();
-      $sql->close();
-
-      $loginExpire = date("Y-m-d H:i:s", strtotime("tomorrow"));
-      $sql = $db->prepare("UPDATE app_config SET value = ? WHERE setting = 'CURRENT_LOGIN_EXPIRATION'");
-      $sql->bind_param("s", $loginExpire);
-      $sql->execute();
-      $sql->close();
+      $expiry = date("Y-m-d H:i:s", strtotime("+6 hours"));
+      $sql = "UPDATE employee
+              SET pos_login_expiry = ?
+              WHERE employee_id = ?";
+      $stmt = $db->prepare($sql);
+      $stmt->bind_param("si", $expiry, $this->id);
+      $stmt->execute();
+      $stmt->close();
     }
 
     public function logout(){
       global $db;
 
-      $stmt = "UPDATE app_config SET value = NULL WHERE setting IN ('CURRENT_LOGIN', 'CURRENT_LOGIN_EXPIRATION')";
-      $db->query($stmt);
+      $now = date("Y-m-d H:i:s");
+      $sql = "UPDATE employee
+              SET pos_login_expiry = ?
+              WHERE employee_id = ?";
+      $stmt = $db->prepare($sql);
+      $stmt->bind_param("si", $now, $this->id);
+      $stmt->execute();
     }
   }
 ?>

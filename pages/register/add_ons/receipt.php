@@ -68,7 +68,7 @@
 <script>
   function generateReceipt(transID){
     params = {
-      "transID": 3
+      "transID": transID
     };
     $.post("<?=SITE_ROOT?>/processing/receipt.php", JSON.stringify(params), (result) => {
       data = JSON.parse(result);

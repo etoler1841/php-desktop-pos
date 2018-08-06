@@ -5,6 +5,7 @@
   $data = json_decode(file_get_contents('php://input'), true);
   extract($data);
   if($mode == 'open'){
+    updateDB($store);
     $store->priceUpdates();
     $stmt = "INSERT INTO register_batch
              SET opening_cash = ".$count.",

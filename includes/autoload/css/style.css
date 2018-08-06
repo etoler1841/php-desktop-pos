@@ -191,6 +191,10 @@ input[type='number'] {
   border: solid #666 1px;
 }
 
+#report {
+  display: none;
+}
+
 #transactionItems .note td{
   /* font-style: italic; */
   padding-left: 20px;

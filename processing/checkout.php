@@ -4,13 +4,13 @@
   require(SITE_ROOT.'/includes/includes.php');
   $data = json_decode(file_get_contents('php://input'), true);
   $stmt = "INSERT INTO transaction
-       SET employee = ".$store->CURRENT_LOGIN.",
-         total = ".$data['total'].",
-         sales_tax = ".$data['sales_tax'].",
-         tender_cash = ".$data['tender_cash'].",
-         tender_credit = ".$data['tender_credit'].",
-         tender_giftcard = ".$data['tender_giftcard'].",
-         change_due = ".$data['change_due'];
+           SET employee = ".$data['empID'].",
+               total = ".$data['total'].",
+               sales_tax = ".$data['sales_tax'].",
+               tender_cash = ".$data['tender_cash'].",
+               tender_credit = ".$data['tender_credit'].",
+               tender_giftcard = ".$data['tender_giftcard'].",
+               change_due = ".$data['change_due'];
   $db->query($stmt);
   $transactionID = $db->insert_id;
 

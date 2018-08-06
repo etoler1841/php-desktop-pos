@@ -92,5 +92,14 @@
 
       return $transTypes;
     }
+
+    public function cashDrop($empID, $amt){
+      global $db;
+
+      $sql = "INSERT INTO transaction
+              SET employee = $empID,
+                  tender_cash = $amt";
+      $db->query($sql);
+    }
   }
 ?>

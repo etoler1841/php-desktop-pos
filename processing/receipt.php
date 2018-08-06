@@ -4,8 +4,8 @@
   require(SITE_ROOT.'/includes/includes.php');
   $params = json_decode(file_get_contents('php://input'), true);
   $stmt = "SELECT products_quantity, products_name, products_price_ext
-       FROM transaction_entry
-       WHERE transaction_id = ".$params['transID'];
+           FROM transaction_entry
+           WHERE transaction_id = ".$params['transID'];
   $data = array();
   $result = $db->query($stmt);
   while($row = $result->fetch_array(MYSQLI_ASSOC)){
@@ -18,10 +18,10 @@
   }
 
   $stmt = "SELECT e.employee_first_name, t.time, SUM(te.products_price_ext) AS products_price_ext, t.sales_tax, t.total, t.tender_cash, t.tender_credit, t.tender_giftcard, t.change_due
-       FROM   transaction t
-       LEFT JOIN transaction_entry te ON t.transaction_id = te.transaction_id
-       LEFT JOIN employee e ON t.employee = e.employee_id
-       WHERE t.transaction_id = ".$params['transID'];
+           FROM   transaction t
+           LEFT JOIN transaction_entry te ON t.transaction_id = te.transaction_id
+           LEFT JOIN employee e ON t.employee = e.employee_id
+           WHERE t.transaction_id = ".$params['transID'];
   $result = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
   $data[] = array(
     "type" => "employee",

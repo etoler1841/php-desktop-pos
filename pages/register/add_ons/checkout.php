@@ -39,8 +39,8 @@
         <p><strong><span id='checkoutText'>Balance</span> Due: $<span id='checkoutDue'>0.00</span></strong></p>
       </div>
       <div class='modal-footer'>
-        <button type='button' class='btn btn-primary' id='checkoutSubmit' disabled>Checkout</button>
-        <button type='button' class='btn btn-secondary' data-dismiss='modal' id='checkoutClose'>Cancel</button>
+        <button class='btn btn-primary' id='checkoutSubmit' disabled>Checkout</button>
+        <button class='btn btn-secondary' data-dismiss='modal' id='checkoutClose'>Cancel</button>
       </div>
     </div>
   </div>
@@ -88,6 +88,7 @@
 
   $("#checkoutSubmit").click(() => {
     let params = {
+      "empID": userID,
       "total": $("#total").text(),
       "sales_tax": $("#tax").text(),
       "tender_cash": $("#checkoutCash").val(),

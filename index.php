@@ -2,20 +2,13 @@
   <?php
     define('SITE_ROOT', '.');
     require(SITE_ROOT.'/includes/includes.php');
+    require(SITE_ROOT.'/pin.php');
   ?>
   <title>Price Busters Games - Point of Sale</title>
 </head>
 <body>
   <div id='wrapper'>
     <?php
-      //If the login has expired, force Logout
-      if(strtotime($store->CURRENT_LOGIN_EXPIRATION) < time()) $store->logout();
-
-      //Redirect if user is not logged in
-      if(!$store->CURRENT_LOGIN) require(SITE_ROOT.'/login.php');
-
-      //Otherwise, set the employee info and load a page
-      $employee = new Employee(intval($store->CURRENT_LOGIN));
       require(SITE_ROOT.'/includes/menu.php');
     ?>
     <div id='content'>
@@ -32,6 +25,12 @@
     <button id='logout' class='btn btn-dark btn-sm'>Logout</button>
   </div>
   <script>
+    $("#pinModal").modal("show");
+
+    $("#pinModal").on("shown.bs.modal", () => {
+      $("#pin").focus();
+    });
+
     $("#logout").click(function(){
       xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function(){

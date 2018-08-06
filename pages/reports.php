@@ -1,15 +1,11 @@
 <?php
-  foreach($_GET as $a => $b){
-    ${$a} = $b;
-  }
+  extract($_GET);
   if($mode == 'daily'){
     $register = new Register($store->registerBatch());
     $reportName = "Daily Report: Batch #".$register->batchID;
     $startTime = $register->timeOpen;
     $endTime = ($register->timeClose) ? $register->timeClose : date("Y-m-d H:i:s");
   }
-  $employee = new Employee($store->CURRENT_LOGIN);
-
   $totals = $register->getTotals();
   $tender = $register->getTender();
   $transTypes = $register->getTransTypes();
@@ -56,11 +52,11 @@
     $drawer['cidDiff']['amt'] = $register->cidDifference;
   }
 ?>
-<div class='report container'>
+<div id='report' class='report container'>
   <h3><?=$reportName?></h3>
   <p>
     <h5>Report Details</h5>
-    <strong>Generated: </strong> <?=date("l, F j, Y g:i:sa")?> by <?=$employee->name?><br />
+    <strong>Generated: </strong> <?=date("l, F j, Y g:i:sa")?> by <span class='employee'></span><br />
     <?php if($mode == 'daily'){
       ?>
       <strong>Batch opened:</strong> <?=date("l, F j, Y g:i:sa", strtotime($register->timeOpen)).' by '.$register->employeeOpenName?><br />
@@ -157,5 +153,10 @@
 <script>
   $("#printButton").click(() => {
     window.print();
+  });
+
+  $("#pinModal").on("hide.bs.modal", () => {
+    $("#report .employee").html(userFull);
+    $("#report").show();
   });
 </script>
