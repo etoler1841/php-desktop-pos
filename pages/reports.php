@@ -36,16 +36,19 @@
           SUM(tender_giftcard) AS `gift card`
        FROM transaction
        WHERE time >= '$startTime'
-       AND time <= '$endTime'";
+       AND time <= '$endTime'
+       AND transaction_id IN (
+         SELECT transaction_id FROM transaction_entry
+       )";
   $tender = $db->query($stmt)->fetch_array(MYSQLI_ASSOC);
 
   $drawer = array(
-          'openingCash' => array('line' => 'Opening cash',
+          'openingCash' => array('line' => 'Opening cash:',
             'amt' => $register->cashOpen),
-          'cashInDrawer' =>array('line' => 'Cash in drawer',
+          'cashInDrawer' =>array('line' => 'Cash in drawer:',
             'amt' => $register->cashInDrawer),
-          'closingCash' => array('line' => 'Closing cash'),
-          'cidDiff' => array('line' => 'CID difference')
+          'closingCash' => array('line' => 'Closing cash:'),
+          'cidDiff' => array('line' => 'CID difference:')
         );
   if($register->cashClose){
     $drawer['closingCash']['amt'] = $register->cashClose;
@@ -69,6 +72,7 @@
   </p>
   <?php
   foreach($transTypes as $type){
+    if(in_array($type['desc'], array('drops', 'reloads'))) continue;
     if(!empty($info[$type['desc']])){ ?>
     <table class='table table-sm report'>
       <thead class='thead-light'>
@@ -119,6 +123,24 @@
           <td class='col-1'>$<?= number_format($totals['grand']['tax'], 2) ?></td>
           <td class='col-1'></td>
         </tr>
+        <?php if($register->cashDropsQty){ ?>
+        <tr class='row'>
+          <td class='col-5'></td>
+          <td class='col-4 text-right pr-5'>Cash Drops:</td>
+          <td class='col-1'><?=$register->cashDropsQty?></td>
+          <td class='col-1'>$<?= number_format($register->cashDrops, 2) ?></td>
+          <td class='col-1'></td>
+        </tr>
+        <?php } ?>
+        <?php if($register->cashReloads){ ?>
+        <tr class='row'>
+          <td class='col-5'></td>
+          <td class='col-4 text-right pr-5'>Cash Reloads:</td>
+          <td class='col-1'><?=$register->cashReloadsQty?></td>
+          <td class='col-1'>$<?= number_format($register->cashReloads, 2) ?></td>
+          <td class='col-1'></td>
+        </tr>
+        <?php } ?>
         <?php foreach($tender as $type => $amt){
           ?>
           <tr class='row'>
@@ -135,14 +157,17 @@
     <table class='table table-sm report'>
       <tbody>
         <?php foreach($drawer as $line){
-          if(in_array($line['line'], array('Closing cash', 'CID difference')) && !$register->cashClose){
+          if(in_array($line['line'], array('Closing cash:', 'CID difference:')) && !$register->cashClose){
             continue;
           } ?>
           <tr class='row'>
             <td class='col-5'></td>
             <td class='col-4 text-right pr-5'><?= $line['line'] ?></td>
             <td class='col-1'></td>
-            <td class='col-1'>$<?= number_format($line['amt'], 2) ?></td>
+            <td class='col-1'>
+            <?php if($line['amt'] < 0) echo '-'; ?>
+            $<?= number_format(abs($line['amt']), 2) ?>
+            </td>
             <td class='col-1'></td>
           </tr>
         <?php } ?>

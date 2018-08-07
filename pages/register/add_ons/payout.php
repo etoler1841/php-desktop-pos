@@ -80,6 +80,7 @@
 
   $("#payoutSubmit").click(() => {
     let params = {
+      "employeeId": userID,
       "amt": $("#payoutAmt").val(),
       "tax": $("#payoutTax").val(),
       "desc": $("#payoutDescription").val(),

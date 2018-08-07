@@ -7,6 +7,9 @@
   <button class='btn btn-sm btn-secondary' id='quickRemove' data-toggle='modal' data-target='#quickRemoveModal'>Quick Remove</button>
   <button class='btn btn-sm btn-secondary' id='payout' data-toggle='modal' data-target='#payoutModal'>Payout</button>
   <hr />
+  <button class='btn btn-sm btn-secondary' id='cashDrop' data-toggle='modal' data-target='#cashDropModal'>Cash Drop</button>
+  <button class='btn btn-sm btn-secondary' id='cashReload' data-toggle='modal' data-target='#cashReloadModal'>Cash Reload</button>
+  <hr />
   <button class='btn btn-sm btn-danger' id='transactionLookup' data-toggle='modal' data-target='#transactionLookupModal'>Transaction Lookup</button>
   <button class='btn btn-sm btn-info' id='closeRegister' data-toggle='modal' data-target='#closeRegisterModal'>Close Register</button>
   <button class="btn btn-sm btn-warning" id="demoReceipt" data-toggle='modal' data-target='#receiptModal'>Show Receipt</button>

@@ -7,7 +7,7 @@
     ${$a} = $db->real_escape_string($b);
   }
   $stmt = "INSERT INTO transaction
-       SET employee = ".$store->CURRENT_LOGIN.",
+       SET employee = ".$employeeId.",
          time = '".date("Y-m-d H:i:s")."',
          total = ".$amt.",
          sales_tax = -".$tax.",

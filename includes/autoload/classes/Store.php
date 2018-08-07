@@ -117,13 +117,11 @@
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_POST, true);
 
-      $stmt = "SELECT upload_queue_id, products_id, products_quantity
-               FROM upload_queue
-               WHERE uploaded = 0";
+      $stmt = "SELECT queue_id, products_id, products_quantity
+               FROM upload_queue";
       $result = $db->query($stmt);
-      $stmt = $db->prepare("UPDATE upload_queue
-                            SET uploaded = 1
-                            WHERE upload_queue_id = ?");
+      $stmt = $db->prepare("DELETE FROM upload_queue
+                            WHERE queue_id = ?");
       while($row = $result->fetch_array(MYSQLI_ASSOC)){
         $data = array(
           "qty" => $row['products_quantity']
@@ -139,30 +137,24 @@
       $stmt->close();
     }
 
-    public function dlQueue(){
+    public function cashDrop($empID, $amt){
       global $db;
-      global $remote;
 
-      $token = $this->SECURITY_TOKEN;
-      $headers = array("Authorization: bearer $token");
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-      curl_setopt($ch, CURLOPT_URL, $remote."/product/queue");
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $type = ($amt < 0) ? 6 : 7;
+      $sql = "INSERT INTO transaction
+              SET employee = $empID,
+                  tender_cash = 0,
+                  tender_credit = 0,
+                  tender_giftcard = 0";
+      $db->query($sql);
+      $transactionID = $db->insert_id;
 
-      $sql = "UPDATE products
-              SET products_quantity = products_quantity + ?
-              WHERE products_id = ?";
-      $stmt = $db->prepare($sql);
-
-      $res = json_decode(curl_exec($ch));
-      if($res->status === 'ok'){
-        foreach($res->results as $row){
-          extract((array)$row);
-          $stmt->bind_param("ii", $products_quantity, $products_id);
-          $stmt->execute();
-        }
-      }
+      $sql = "INSERT INTO transaction_entry
+              SET transaction_id = $transactionID,
+                  entry_type = $type,
+                  products_price_ea = $amt,
+                  products_price_ext = $amt";
+      $db->query($sql);
     }
   }
 ?>
