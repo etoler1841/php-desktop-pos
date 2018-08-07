@@ -29,6 +29,7 @@
     <script src='<?=SITE_ROOT?>/includes/bootstrap_js/jquery.js'></script>
     <script src='<?=SITE_ROOT?>/includes/bootstrap_js/popper.js'></script>
     <script src='<?=SITE_ROOT?>/includes/bootstrap_js/bootstrap.js'></script>
+    <script>let suppressPIN = false;</script>
 
     <?php
     //Import CSS files

@@ -81,6 +81,8 @@
   </div>
 </div>
 <script>
+  suppressPIN = true;
+
   $("#transactionItems table").on("click", "tbody .clickable", (e) => {
     $(e.currentTarget).addClass("highlight").siblings().removeClass("highlight");
     if($(e.currentTarget).hasClass("returnable")){

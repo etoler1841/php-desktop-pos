@@ -9,12 +9,12 @@
     $store->priceUpdates();
     $stmt = "INSERT INTO register_batch
              SET opening_cash = ".$count.",
-                 opening_employee = ".$store->CURRENT_LOGIN;
+                 opening_employee = ".$empID;
   } elseif ($mode == 'close'){
     $stmt = "UPDATE register_batch
              SET closing_cash = ".$count.",
                  closing_time = '".date("Y-m-d H:i:s")."',
-                 closing_employee = ".$store->CURRENT_LOGIN.",
+                 closing_employee = ".$empID.",
                  closing_cid_difference = ".$store->cidDifference($count)."
              WHERE register_batch_id = ".$store->registerBatch();
   }

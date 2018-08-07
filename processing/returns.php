@@ -34,7 +34,7 @@
           $result['tax'] = number_format($result['price']*$store->SALES_TAX, 2);
           $result['total'] = number_format($result['price']+$result['tax'], 2);
           $stmt = "INSERT INTO transaction
-                    SET employee = ".$store->CURRENT_LOGIN.",
+                    SET employee = ".$data['empID'].",
                         total = -".$result['total'].",
                         sales_tax = -".$result['tax'].",
                         tender_cash = 0.00,
@@ -66,7 +66,7 @@
           $result['tax'] = number_format($result['price']*$store->SALES_TAX, 2);
           $result['total'] = number_format($result['price']+$result['tax'], 2);
           $stmt = "INSERT INTO transaction
-                    SET employee = ".$store->CURRENT_LOGIN.",
+                    SET employee = ".$data['empID'].",
                         total = -".$result['total'].",
                         sales_tax = -".$result['tax'].",
                         tender_cash = 0.00,

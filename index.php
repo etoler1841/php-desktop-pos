@@ -34,22 +34,21 @@
       dlQueue();
     }, 60000);
 
-    $("#pinModal").modal("show");
+    if(!suppressPIN){
+      $("#pinModal").modal("show");
+    }
 
     $("#pinModal").on("shown.bs.modal", () => {
       $("#pin").focus();
     });
 
     $("#logout").click(function(){
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function(){
-        if(this.readyState == 4 & this.status == 200){
-          window.location.reload(true);
-        }
+      let params = {
+        empID: userID
       };
-      xhttp.open('POST', 'processing/logout.php');
-      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xhttp.send('logout=true');
+      $.post("<?=SITE_ROOT?>/processing/logout.php", JSON.stringify(params), () => {
+        location.reload(true);
+      });
     });
   </script>
 </body>

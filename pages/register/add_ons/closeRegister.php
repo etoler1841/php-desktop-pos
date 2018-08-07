@@ -146,6 +146,7 @@
       mode = 'close';
     }
     let params = {
+      "empID": userID,
       "mode": mode,
       "count": $("#closeRegisterTotal").text(),
     };
@@ -155,7 +156,7 @@
       } else if (mode == 'close'){
         console.log(results);
         data = JSON.parse(results);
-        window.location.href = "?page=reports&mode=daily&batch="+data.batchID;
+        window.location.href = "?page=reports&mode=daily&batch="+data.batchID+"&pin=false";
       }
     });
   });

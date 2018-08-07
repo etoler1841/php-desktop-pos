@@ -33,7 +33,10 @@
 
   $("#transactionLookupSubmit").click(() => {
     let id = $("#transactionID").val();
-    let params = { "id": id };
+    let params = {
+      "id": id,
+      "empID": userID
+    };
     $.post("<?=SITE_ROOT?>/processing/transactionLookup.php", JSON.stringify(params), (response) => {
       if(response == 'success'){
         window.location.href = "?page=transactionLookup&transID="+id;
